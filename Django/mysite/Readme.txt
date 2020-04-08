@@ -4,8 +4,3 @@ in order to run this app you may need to
 install Django using cmd: 
 pip install Django
 
-upgrate database using cmd:
-python manage.py makemigrations
-python manage.py migrate
-
-insert data to databese use store-dataload.sql
