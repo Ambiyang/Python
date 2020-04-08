@@ -1,7 +1,7 @@
 This is a sample of simple shopping site made by Django
 sqlitestudio-3.1.0 is the database tool used in this app
-in order ti run this app you may need to
-install Django by cmd: 
+in order to run this app you may need to
+install Django using cmd: 
 pip install Django
 
 upgrate database using cmd:
