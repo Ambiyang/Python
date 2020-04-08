@@ -1,0 +1,1 @@
+This is a sample of simple shopping site made by Django
