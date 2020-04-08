@@ -4,3 +4,5 @@ in order to run this app you may need to
 install Django using cmd: 
 pip install Django
 
+log in id:123 pwd:123
+
