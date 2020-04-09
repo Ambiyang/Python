@@ -14,7 +14,6 @@ class GameLayer(Layer):
         self.add(sp, name='particle')
 
 
-# 自定义主菜单类
 class MainMenu(Menu):
 
     def __init__(self):
