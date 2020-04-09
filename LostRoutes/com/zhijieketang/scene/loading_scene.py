@@ -25,6 +25,8 @@ import pyglet.image
 from com.zhijieketang.scene import home_scene
 
 # 资源图片路径
+from com.zhijieketang.utility.tools import add_to_scene, add_to_scene
+
 RES_PATH = 'resources/image/loding/'
 logger = logging.getLogger(__name__)
 
@@ -40,10 +42,7 @@ class LoadingLayer(cocos.layer.Layer):
         s_width, s_height = cocos.director.director.get_window_size()
 
         # 创建背景精灵
-        background = cocos.sprite.Sprite(RES_PATH + 'bg.png')
-        background.position = s_width // 2, s_height // 2
-        # 添加背景精灵
-        self.add(background, 0)
+        add_to_scene(self,RES_PATH + 'bg.png')
 
         # 动画帧序列
         frames = [pyglet.resource.image(RES_PATH + 'loding1.png'),

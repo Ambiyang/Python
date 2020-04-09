@@ -24,6 +24,8 @@ import cocos.sprite
 from com.zhijieketang.utility import tools
 
 # 资源图片路径
+from com.zhijieketang.utility.tools import add_to_scene
+
 RES_PATH = 'resources/image/gameover/'
 HIGHSCORE_KEY = 'high_score'
 SCORE_KEY = 'score'
@@ -65,10 +67,7 @@ class GameOverLayer(cocos.layer.Layer):
         self.add(self.scorelabel, 1)
 
         # 创建背景精灵
-        background = cocos.sprite.Sprite(RES_PATH + 'bg.png')
-        background.position = s_width // 2, s_height // 2
-        # 添加背景精灵
-        self.add(background, 0)
+        add_to_scene(self, RES_PATH + 'bg.png')
 
 
 class MainMenu(cocos.menu.Menu):

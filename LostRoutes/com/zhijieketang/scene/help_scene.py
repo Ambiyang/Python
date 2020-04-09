@@ -21,6 +21,8 @@ import cocos.sprite
 from com.zhijieketang.utility import tools
 
 # 资源图片路径
+from com.zhijieketang.utility.tools import add_to_scene
+
 RES_PATH = 'resources/image/help/'
 logger = logging.getLogger(__name__)
 
@@ -32,13 +34,14 @@ class HelpLayer(cocos.layer.Layer):
 
         logger.info('初始化帮助层')
 
-        # 获得窗口的宽度和高度
-        s_width, s_height = cocos.director.director.get_window_size()
-        # 创建背景精灵
-        background = cocos.sprite.Sprite(RES_PATH + 'bg.png')
-        background.position = s_width // 2, s_height // 2
-        # 添加背景精灵到HelloWorld层
-        self.add(background, 0)
+        # # 获得窗口的宽度和高度
+        # s_width, s_height = cocos.director.director.get_window_size()
+        # # 创建背景精灵
+        # background = cocos.sprite.Sprite(RES_PATH + 'bg.png')
+        # background.position = s_width // 2, s_height // 2
+        # # 添加背景精灵到HelloWorld层
+        # self.add(background, 0)
+        add_to_scene(self, RES_PATH + 'bg.png')
 
 
 class MainMenu(cocos.menu.Menu):

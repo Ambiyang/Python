@@ -12,6 +12,7 @@
 
 import configparser
 
+import cocos
 from cocos.audio.effect import Effect
 from cocos.audio.pygame import music
 
@@ -49,3 +50,17 @@ def playeffect(soundfile):
     if soundstatus == 1:
         effect = Effect(RES_PATH + soundfile)
         effect.play()
+
+def add_to_scene(self, path, point = (-1, -1)):
+    # 创建背景精灵
+    spirit = cocos.sprite.Sprite(path)
+    if point == (-1, -1):
+        point = cocos.director.director.get_window_size()
+
+    spirit.position = point[0] // 2, point[1] // 2
+    self.add(spirit, 0)
+
+def show_next_scene(next_scene):
+    ts = cocos.scenes.FadeTransition(next_scene, 1.0)
+    cocos.director.director.push(ts)
+    playeffect('Blip.wav')

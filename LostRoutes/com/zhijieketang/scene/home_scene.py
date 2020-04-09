@@ -27,6 +27,8 @@ from com.zhijieketang.scene import help_scene, gameplay_scene, setting_scene
 from com.zhijieketang.utility import tools
 
 # 资源图片路径
+from com.zhijieketang.utility.tools import add_to_scene, show_next_scene
+
 RES_PATH = 'resources/image/home/'
 logger = logging.getLogger(__name__)
 
@@ -46,16 +48,9 @@ class HomeLayer(cocos.layer.Layer):
         if len(self.get_children()) != 0:  # 判断是否层已经初始化
             return
 
-        # 获得窗口的宽度和高度
-        s_width, s_height = cocos.director.director.get_window_size()
-
         tools.playmusic('home_bg.ogg')
-        # 创建背景精灵
-        background = cocos.sprite.Sprite(RES_PATH + 'bg.png')
-        background.position = s_width // 2, s_height // 2
-        # 添加背景精灵
-        self.add(background, 0)
 
+        add_to_scene(self,RES_PATH + 'bg.png')
 
 class MainMenu(cocos.menu.Menu):
 
@@ -102,24 +97,15 @@ class MainMenu(cocos.menu.Menu):
 
     def on_start_item_callback(self):
         next_scene = gameplay_scene.create_scene()
-        ts = cocos.scenes.FadeTransition(next_scene, 1.0)
-        cocos.director.director.push(ts)
-        # 播放音效
-        tools.playeffect('Blip.wav')
+        show_next_scene(next_scene)
 
     def on_setting_item_callback(self):
         next_scene = setting_scene.create_scene()
-        ts = cocos.scenes.FadeTransition(next_scene, 1.0)
-        cocos.director.director.push(ts)
-        # 播放音效
-        tools.playeffect('Blip.wav')
+        show_next_scene(next_scene)
 
     def on_help_item_callback(self):
         next_scene = help_scene.create_scene()
-        ts = cocos.scenes.FadeTransition(next_scene, 1.0)
-        cocos.director.director.push(ts)
-        # 播放音效
-        tools.playeffect('Blip.wav')
+        show_next_scene(next_scene)
 
 
 def create_scene():

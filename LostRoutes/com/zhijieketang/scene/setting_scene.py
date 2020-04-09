@@ -24,9 +24,17 @@ import pyglet
 from com.zhijieketang.utility import tools
 
 # 资源图片路径
+from com.zhijieketang.utility.tools import add_to_scene
+
 RES_PATH = 'resources/image/setting/'
 logger = logging.getLogger(__name__)
 
+
+class FuncBtn(object):
+    def __init__(self, log_field, status=None, ctl=None):
+        self.status = status
+        self.ctl = ctl
+        self.log_field = log_field
 
 class SettingLayer(cocos.layer.Layer):
     is_event_handler = True
@@ -36,84 +44,69 @@ class SettingLayer(cocos.layer.Layer):
 
         logger.info('初始化设置层')
 
-        # 获得窗口的宽度和高度
-        s_width, s_height = cocos.director.director.get_window_size()
+        add_to_scene(self, RES_PATH + 'bg.png')
 
-        # 创建背景精灵
-        background = cocos.sprite.Sprite(RES_PATH + 'bg.png')
-        background.position = s_width // 2, s_height // 2
-        # 添加背景精灵到HelloWorld层
-        self.add(background, 0)
-
-        # 读取配置信息
+        # # 读取配置信息
         self.config = configparser.ConfigParser()
         self.config.read('config.ini', encoding='utf-8')
         # 读取音效状态
-        self.soundstatus = self.config.getint('setting', 'sound_status')
+        self.sound = FuncBtn('sound_status')
+        self.music = FuncBtn('music_status')
+
+        self.sound.status = self.config.getint('setting', 'sound_status')
         # 读取背景音乐状态
-        self.musicstatus = self.config.getint('setting', 'music_status')
+        self.music.status = self.config.getint('setting', 'music_status')
 
         self.check_on_image = pyglet.resource.image(RES_PATH + 'check-on.png')
         self.check_off_image = pyglet.resource.image(RES_PATH + 'check-off.png')
 
-        if self.soundstatus == 0:
-            # 音效未开启
-            self.soundchk = cocos.sprite.Sprite(self.check_off_image)
-        else:
-            # 音效开启
-            self.soundchk = cocos.sprite.Sprite(self.check_on_image)
-        self.soundchk.position = 210, 328
-        self.add(self.soundchk, 0)
+        self.sound.ctl = self.make_check_button(self.sound.status, 210, 328)
+        self.music.ctl = self.make_check_button(self.music.status, 210, 270)
 
-        if self.musicstatus == 0:
-            # 音效未开启
-            self.musicchk = cocos.sprite.Sprite(self.check_off_image)
+    def make_check_button(self, status, x, y):
+        ctl = self.load_img(status)
+        ctl.position = x, y
+        self.add(ctl, 0)
+        return ctl
+
+    def load_img(self, status):
+        # 读取配置信息
+        if status == 0:
+            img = cocos.sprite.Sprite(self.check_off_image)
         else:
-            # 音效开启
-            self.musicchk = cocos.sprite.Sprite(self.check_on_image)
-        self.musicchk.position = 210, 270
-        self.add(self.musicchk, 0)
+            img = cocos.sprite.Sprite(self.check_on_image)
+        return img
 
     def on_mouse_release(self, x, y, button, modifiers):
         if button == pyglet.window.mouse.LEFT:
             # 音效复选框精灵矩形轮廓
-            soundchkrect = self.soundchk.get_rect()
+            soundchkrect = self.sound.ctl.get_rect()
             # 背景音乐复选框精灵矩形轮廓
-            musicchkrect = self.musicchk.get_rect()
+            musicchkrect = self.music.ctl.get_rect()
 
             # 单击音效复选框精灵
             if soundchkrect.contains(x, y):
                 logger.debug('单击音效复选框精灵')
-                if self.soundstatus == 0:
-                    # 音效开启
-                    self.soundchk.image = self.check_on_image
-                    self.soundstatus = 1
-                else:
-                    # 音效未开启
-                    self.soundchk.image = self.check_off_image
-                    self.soundstatus = 0
-                # 写入音效状态
-                self.config['setting']['sound_status'] = str(self.soundstatus)
-                with open('config.ini', 'w') as fw:
-                    self.config.write(fw)
+                self.handle_click(self.sound)
 
             # 单击背景音乐复选框精灵
             if musicchkrect.contains(x, y):
                 logger.debug('单击音乐复选框精灵')
-                if self.musicstatus == 0:
-                    # 背景音乐开启
-                    self.musicchk.image = self.check_on_image
-                    self.musicstatus = 1
-                else:
-                    # 背景音乐未开启
-                    self.musicchk.image = self.check_off_image
-                    self.musicstatus = 0
-                # 播放或停止背景音乐
-                tools.playmusic('home_bg.ogg', self.musicstatus)
-                # 写入背景音乐状态
-                self.config['setting']['music_status'] = str(self.musicstatus)
-                with open('config.ini', 'w') as fw:
-                    self.config.write(fw)
+                self.handle_click(self.music)
+
+    def handle_click(self, btn):
+        if btn.status == 0:
+            # 音效开启
+            btn.ctl.image = self.check_on_image
+            btn.status = 1
+        else:
+            # 音效未开启
+            btn.ctl.image = self.check_off_image
+            btn.status = 0
+        # 写入音效状态
+        self.config['setting'][btn.log_field] = str(btn.status)
+        with open('config.ini', 'w') as fw:
+            self.config.write(fw)
 
 
 class MainMenu(cocos.menu.Menu):
@@ -140,6 +133,7 @@ class MainMenu(cocos.menu.Menu):
         cocos.director.director.pop()
         # 播放音效
         tools.playeffect('Blip.wav')
+
 
 def create_scene():
     """创建设置场景函数"""
